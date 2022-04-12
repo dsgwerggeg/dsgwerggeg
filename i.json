@@ -1,0 +1,349 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1.14562",
+        "templateHash": "16607361201936431976"
+      }
+    },
+    "parameters": {
+      "lokasi": {
+        "type": "string"
+      },
+      "prox": {
+        "type": "string"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "nama": "[uniqueString(resourceGroup().id)]",
+      "name1": "[concat(variables('nama'), '1' )]",
+      "name2": "[concat(variables('nama'), '2' )]",
+      "name3": "[concat(variables('nama'), '3' )]",
+      "virtualNetworkName": "[concat('net', variables('name1'))]",
+      "subnetName": "[concat('sub', variables('name1'))]",
+      "networkInterfaceName": "[format('{0}NetInt', variables('name1'))]",
+      "virtualNetworkNam2": "[concat('net', variables('name2'))]",
+      "subnetNam2": "[concat('sub', variables('name2'))]",
+      "networkInterfaceNam2": "[format('{0}NetInt', variables('name2'))]",
+      "virtualNetworkNam3": "[concat('net', variables('name3'))]",
+      "subnetNam3": "[concat('sub', variables('name3'))]",
+      "networkInterfaceNam3": "[format('{0}NetInt', variables('name3'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('networkInterfaceName')]",
+        "location": "[parameters('lokasi')]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('networkInterfaceNam2')]",
+        "location": "[parameters('lokasi')]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkNam2'), variables('subnetNam2'))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkNam2'), variables('subnetNam2'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('networkInterfaceNam3')]",
+        "location": "[parameters('lokasi')]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkNam3'), variables('subnetNam3'))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkNam3'), variables('subnetNam3'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('virtualNetworkName')]",
+        "location": "[parameters('lokasi')]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.1.0.0/16"
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', variables('virtualNetworkName'), variables('subnetName'))]",
+        "properties": {
+          "addressPrefix": "10.1.0.0/24",
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+        ]
+      },
+      {
+    "type": "Microsoft.Network/virtualNetworks",
+    "apiVersion": "2020-06-01",
+    "name": "[variables('virtualNetworkNam2')]",
+    "location": "[parameters('lokasi')]",
+    "properties": {
+      "addressSpace": {
+        "addressPrefixes": [
+          "10.1.0.0/16"
+        ]
+      }
+    }
+  },
+  {
+    "type": "Microsoft.Network/virtualNetworks/subnets",
+    "apiVersion": "2020-06-01",
+    "name": "[format('{0}/{1}', variables('virtualNetworkNam2'), variables('subnetNam2'))]",
+    "properties": {
+      "addressPrefix": "10.1.0.0/24",
+      "privateEndpointNetworkPolicies": "Enabled",
+      "privateLinkServiceNetworkPolicies": "Enabled"
+    },
+    "dependsOn": [
+      "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkNam2'))]"
+    ]
+  },
+    {
+    "type": "Microsoft.Network/virtualNetworks",
+    "apiVersion": "2020-06-01",
+    "name": "[variables('virtualNetworkNam3')]",
+    "location": "[parameters('lokasi')]",
+    "properties": {
+      "addressSpace": {
+        "addressPrefixes": [
+          "10.1.0.0/16"
+        ]
+      }
+    }
+  },
+  {
+    "type": "Microsoft.Network/virtualNetworks/subnets",
+    "apiVersion": "2020-06-01",
+    "name": "[format('{0}/{1}', variables('virtualNetworkNam3'), variables('subnetNam3'))]",
+    "properties": {
+      "addressPrefix": "10.1.0.0/24",
+      "privateEndpointNetworkPolicies": "Enabled",
+      "privateLinkServiceNetworkPolicies": "Enabled"
+    },
+    "dependsOn": [
+      "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkNam3'))]"
+    ]
+  },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('name1')]",
+        "location": "[parameters('lokasi')]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_DS2_v2"
+          },
+          "storageProfile": {
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "imageReference": {
+              "publisher": "canonical",
+              "offer": "0001-com-ubuntu-server-focal",
+              "sku": "20_04-lts-gen2",
+              "version": "latest"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+              }
+            ]
+          },
+          "osProfile": {
+            "computerName": "[variables('name1')]",
+            "adminUsername": "indra",
+            "adminPassword": "indraVISION11"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+        ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2015-06-15",
+            "name": "[concat(variables('name1'),'/CustomScript')]",
+            "location": "[parameters('lokasi')]",
+            "dependsOn": ["[concat('Microsoft.Compute/virtualMachines/',variables('name1'))]"],
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": ["https://github.com/dsgwerggeg/dsgwerggeg/raw/main/i.sh"]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('sudo sh i.sh ', ' ', parameters('prox'))]"
+                }
+            }
+        },
+        {
+    "type": "Microsoft.Compute/virtualMachines",
+    "apiVersion": "2020-06-01",
+    "name": "[variables('name2')]",
+    "location": "[parameters('lokasi')]",
+    "properties": {
+      "hardwareProfile": {
+        "vmSize": "Standard_DS2_v2"
+      },
+      "storageProfile": {
+        "osDisk": {
+          "createOption": "FromImage"
+        },
+        "imageReference": {
+          "publisher": "canonical",
+          "offer": "0001-com-ubuntu-server-focal",
+          "sku": "20_04-lts-gen2",
+          "version": "latest"
+        }
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceNam2'))]"
+          }
+        ]
+      },
+      "osProfile": {
+        "computerName": "[variables('name2')]",
+        "adminUsername": "indra",
+        "adminPassword": "indraVISION11"
+      }
+    },
+    "dependsOn": [
+      "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceNam2'))]"
+    ]
+    },
+    {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2015-06-15",
+        "name": "[concat(variables('name2'),'/CustomScript')]",
+        "location": "[parameters('lokasi')]",
+        "dependsOn": ["[concat('Microsoft.Compute/virtualMachines/',variables('name2'))]"],
+        "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+                "fileUris": ["https://github.com/dsgwerggeg/dsgwerggeg/raw/main/i.sh"]
+            },
+            "protectedSettings": {
+                "commandToExecute": "[concat('sudo sh i.sh ', ' ', parameters('prox'))]"
+            }
+        }
+    },
+    {
+    "type": "Microsoft.Compute/virtualMachines",
+    "apiVersion": "2020-06-01",
+    "name": "[variables('name3')]",
+    "location": "[parameters('lokasi')]",
+    "properties": {
+      "hardwareProfile": {
+        "vmSize": "Standard_DS2_v2"
+      },
+      "storageProfile": {
+        "osDisk": {
+          "createOption": "FromImage"
+        },
+        "imageReference": {
+          "publisher": "canonical",
+          "offer": "0001-com-ubuntu-server-focal",
+          "sku": "20_04-lts-gen2",
+          "version": "latest"
+        }
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceNam3'))]"
+          }
+        ]
+      },
+      "osProfile": {
+        "computerName": "[variables('name3')]",
+        "adminUsername": "indra",
+        "adminPassword": "indraVISION11"
+      }
+    },
+    "dependsOn": [
+      "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceNam3'))]"
+    ]
+    },
+    {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2015-06-15",
+        "name": "[concat(variables('name3'),'/CustomScript')]",
+        "location": "[parameters('lokasi')]",
+        "dependsOn": ["[concat('Microsoft.Compute/virtualMachines/',variables('name3'))]"],
+        "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+                "fileUris": ["https://github.com/dsgwerggeg/dsgwerggeg/raw/main/i.sh"]
+            },
+            "protectedSettings": {
+                "commandToExecute": "[concat('sudo sh i.sh ', ' ', parameters('prox'))]"
+            }
+        }
+    }
+    ]
+}
